@@ -1,2 +1,5 @@
 # sphinx-pyscript
- A sphinx extension for adding pyscript to a page
+
+This is a Sphinx extension that allows you to use [PyScript](https://docs.pyscript.net) in your documentation.
+
+See the documentation for details.
