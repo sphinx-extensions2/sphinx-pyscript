@@ -22,7 +22,7 @@ myst_enable_extensions = ["deflist"]
 
 html_theme = "furo"
 html_theme_options = {
-    "source_repository": "https://github.com/chrisjsewell/sphinx_pyscript/",
+    "source_repository": "https://github.com/chrisjsewell/sphinx-pyscript/",
     "source_branch": "main",
     "source_directory": "docs/",
 }

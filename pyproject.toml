@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.urls]
-Home = "https://github.com/chrisjsewell/sphinx_pyscript"
+Home = "https://github.com/chrisjsewell/sphinx-pyscript"
 Documentation = "https://sphinx-pyscript.readthedocs.io"
 
 [project.optional-dependencies]
