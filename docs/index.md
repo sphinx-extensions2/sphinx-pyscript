@@ -1,6 +1,6 @@
 # Sphinx PyScript
 
-![GitHub Repo stars](https://img.shields.io/github/stars/chrisjsewell/sphinx-pyscript?label=Like%20and%20Share%21&style=social)
+[![GitHub Repo stars](https://img.shields.io/github/stars/chrisjsewell/sphinx-pyscript?label=Like%20and%20Share%21&style=social)](https://github.com/chrisjsewell/sphinx-pyscript)
 
 This is a Sphinx extension that allows you to use [PyScript](https://docs.pyscript.net) in your documentation.
 
