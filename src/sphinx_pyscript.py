@@ -159,7 +159,9 @@ def _copy_wheels(app: Sphinx, data: dict) -> None:
                     location=(app.env.docname, 0),
                 )
                 continue
-            packages.append(app.env.dlfiles.add_file(app.env.docname, rel_filename))
+            packages.append(
+                "_downloads/" + app.env.dlfiles.add_file(app.env.docname, rel_filename)
+            )
         else:
             packages.append(pkg)
     if packages:
