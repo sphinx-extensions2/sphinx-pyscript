@@ -4,6 +4,7 @@ py-config:
     autoclose: true
   packages:
   - matplotlib
+  - hallo_world-0.1.0-py2.py3-none-any.whl
 ---
 
 # Example with MyST
