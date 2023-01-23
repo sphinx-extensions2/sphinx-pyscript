@@ -3,6 +3,7 @@
 __version__ = "0.1.0"
 
 import json
+import os
 from pathlib import Path
 
 import yaml
@@ -134,6 +135,7 @@ def doctree_read(app: Sphinx, doctree: nodes.document):
             )
         else:
             doctree["pyscript"] = True
+            _copy_wheels(app, data)
             data_str = json.dumps(data, indent=2)
             doctree.append(
                 nodes.raw(
@@ -142,3 +144,23 @@ def doctree_read(app: Sphinx, doctree: nodes.document):
                     format="html",
                 )
             )
+
+
+def _copy_wheels(app: Sphinx, data: dict):
+    """Copy wheels to the output directory."""
+    packages = []
+    for pkg in data.get("packages", []):
+        if pkg.endswith(".whl"):
+            rel_filename, filename = app.env.relfn2path(pkg, app.env.docname)
+            app.env.dependencies[app.env.docname].add(rel_filename)
+            if not os.access(filename, os.R_OK):
+                LOGGER.warning(
+                    f"Could not read pyscript wheel: {filename}",
+                    location=(app.env.docname, 0),
+                )
+                continue
+            packages.append(app.env.dlfiles.add_file(app.env.docname, rel_filename))
+        else:
+            packages.append(pkg)
+    if packages:
+        data["packages"] = packages
