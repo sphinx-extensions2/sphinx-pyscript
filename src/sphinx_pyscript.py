@@ -146,7 +146,7 @@ def doctree_read(app: Sphinx, doctree: nodes.document):
             )
 
 
-def _copy_wheels(app: Sphinx, data: dict):
+def _copy_wheels(app: Sphinx, data: dict) -> None:
     """Copy wheels to the output directory."""
     packages = []
     for pkg in data.get("packages", []):
