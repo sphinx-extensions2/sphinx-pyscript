@@ -11,19 +11,20 @@ from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
+DEFAULT_VERSION = "2024.4.2"
 
 
 def setup(app: Sphinx):
     """Setup the extension"""
     app.add_config_value(
-        "pyscript_js", "https://pyscript.net/releases/2022.12.1/pyscript.js", "env"
+        "pyscript_js", f"https://pyscript.net/releases/{DEFAULT_VERSION}/core.js", "env"
     )
     app.add_config_value(
-        "pyscript_css", "https://pyscript.net/releases/2022.12.1/pyscript.css", "env"
+        "pyscript_css", f"https://pyscript.net/releases/{DEFAULT_VERSION}/core.css", "env"
     )
     app.add_directive("py-config", PyConfig)
     app.add_directive("py-script", PyScript)
-    app.add_directive("py-repl", PyRepl)
+    app.add_directive("py-editor", PyRepl)
     app.add_directive("py-terminal", PyTerminal)
     app.connect("doctree-read", doctree_read)
     app.connect("html-page-context", add_html_context)
@@ -72,7 +73,7 @@ class PyScript(SphinxDirective):
             code = "\n".join(self.content)
         else:
             raise self.error("Must provide either content or the 'file' option")
-        return [nodes.raw("", f"<py-script>\n{code}\n</py-script>\n", format="html")]
+        return [nodes.raw("", f"<script type='py'>\n{code}\n</script>\n", format="html")]
 
 
 class PyRepl(SphinxDirective):
@@ -94,7 +95,7 @@ class PyRepl(SphinxDirective):
             attrs += f' output="{self.options["output"]}"'
         if self.content:
             code = "\n".join(self.content)
-        return [nodes.raw("", f"<py-repl{attrs}>\n{code}\n</py-repl>\n", format="html")]
+        return [nodes.raw("", f"<script type='py-editor' {attrs}>\n{code}\n</script>\n", format="html")]
 
 
 class PyTerminal(SphinxDirective):
@@ -107,9 +108,9 @@ class PyTerminal(SphinxDirective):
     def run(self):
         """Add the py-terminal tag"""
         attrs = ""
-        if "auto" in self.options:
-            attrs += " auto"
-        return [nodes.raw("", f"<py-terminal{attrs}></py-terminal>\n", format="html")]
+        if "worker" in self.options:
+            attrs += " worker"
+        return [nodes.raw("", f"<script type='py' terminal {attrs}></script>\n", format="html")]
 
 
 def add_html_context(
@@ -117,7 +118,7 @@ def add_html_context(
 ):
     """Add extra variables to the HTML template context."""
     if doctree and "pyscript" in doctree:
-        app.add_js_file(app.config.pyscript_js, loading_method="defer")
+        app.add_js_file(app.config.pyscript_js, type="module")
         app.add_css_file(app.config.pyscript_css)
 
 
