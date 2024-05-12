@@ -1,6 +1,6 @@
 """A sphinx extension for adding pyscript to a page"""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import json
 from pathlib import Path
@@ -10,7 +10,10 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
+from sphinx.util.fileutil import copy_asset_file
 from sphinx.util.logging import getLogger
+
+
 DEFAULT_VERSION = "2024.4.2"
 
 
@@ -28,6 +31,7 @@ def setup(app: Sphinx):
     app.add_directive("py-terminal", PyTerminal)
     app.connect("doctree-read", doctree_read)
     app.connect("html-page-context", add_html_context)
+    app.connect('build-finished', copy_asset_files)
     return {"version": __version__, "parallel_read_safe": True}
 
 
@@ -119,6 +123,7 @@ def add_html_context(
     """Add extra variables to the HTML template context."""
     if doctree and "pyscript" in doctree:
         app.add_js_file(app.config.pyscript_js, type="module")
+        app.add_js_file("../mini-coi.js")
         app.add_css_file(app.config.pyscript_css)
 
 
@@ -143,3 +148,9 @@ def doctree_read(app: Sphinx, doctree: nodes.document):
                     format="html",
                 )
             )
+
+def copy_asset_files(app, exc):
+    if app.builder.format == 'html' and not exc:
+        custom_file = (Path(__file__).parent / 'mini-coi.js').absolute()
+        static_dir = (Path(app.builder.outdir)).absolute()
+        copy_asset_file(custom_file, static_dir)
