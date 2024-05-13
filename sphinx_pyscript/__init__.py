@@ -27,7 +27,7 @@ def setup(app: Sphinx):
     )
     app.add_directive("py-config", PyConfig)
     app.add_directive("py-script", PyScript)
-    app.add_directive("py-editor", PyRepl)
+    app.add_directive("py-editor", PyEditor)
     app.add_directive("py-terminal", PyTerminal)
     app.connect("doctree-read", doctree_read)
     app.connect("html-page-context", add_html_context)
@@ -80,23 +80,26 @@ class PyScript(SphinxDirective):
         return [nodes.raw("", f"<script type='py'>\n{code}\n</script>\n", format="html")]
 
 
-class PyRepl(SphinxDirective):
+class PyEditor(SphinxDirective):
     """Add a py-repl tag"""
 
     has_content = True
     option_spec = {
-        "auto-generate": directives.flag,
-        "output": directives.unchanged,
+        "setup": directives.flag,
+        "env": directives.unchanged,
+        "config": directives.unchanged,
     }
 
     def run(self):
         """Add the py-repl tag"""
         attrs = ""
         code = ""
-        if "auto-generate" in self.options:
-            attrs += ' auto-generate="true"'
-        if "output" in self.options:
-            attrs += f' output="{self.options["output"]}"'
+        if "env" in self.options:
+            attrs += f' env="{self.options["""env"""]}"'
+        if "config" in self.options:
+            attrs += f' config="{self.options["""config"""]}"'
+        if "setup" in self.options:
+            attrs += f'setup'
         if self.content:
             code = "\n".join(self.content)
         return [nodes.raw("", f"<script type='py-editor' {attrs}>\n{code}\n</script>\n", format="html")]
@@ -106,7 +109,6 @@ class PyTerminal(SphinxDirective):
     """Add a py-terminal tag"""
 
     option_spec = {
-        "auto": directives.flag,
     }
 
     def run(self):
