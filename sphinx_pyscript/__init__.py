@@ -13,7 +13,7 @@ from sphinx.util.docutils import SphinxDirective
 from sphinx.util.fileutil import copy_asset_file
 from sphinx.util.logging import getLogger
 
-DEFAULT_VERSION = "2024.4.2"
+DEFAULT_VERSION = "2024.5.2"
 
 
 def setup(app: Sphinx):
