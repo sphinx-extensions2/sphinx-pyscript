@@ -9,7 +9,7 @@ Example with RST
 ================
 
 `py-editor` and `py-terminal`
-----------------------------
+-----------------------------
 
 We can create an editor cell which will print its `stdout`:
 
