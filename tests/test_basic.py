@@ -16,6 +16,8 @@ Test
 
 .. py-editor::
 
+.. py-terminal::
+
 .. py-script::
 
     print("Hello World")
@@ -30,15 +32,15 @@ Test
         <title>
             Test
         <raw format="html" xml:space="preserve">
-            <script type="py-editor">
+            <script type="py-editor" >
 
             </script>
         <raw format="html" xml:space="preserve">
-            <py-terminal></py-terminal>
+            <script type='py' terminal ></script>
         <raw format="html" xml:space="preserve">
-            <py-script>
+            <script type='py'>
             print("Hello World")
-            </py-script>
+            </script>
     <raw format="html" xml:space="preserve">
         <py-config type="json">
         {
