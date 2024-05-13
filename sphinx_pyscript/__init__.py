@@ -32,7 +32,7 @@ def setup(app: Sphinx):
     app.add_directive("py-terminal", PyTerminal)
     app.connect("doctree-read", doctree_read)
     app.connect("html-page-context", add_html_context)
-    app.connect("build-finished", copy_asset_files)
+    app.connect("env-updated", copy_asset_files)
     return {"version": __version__, "parallel_read_safe": True}
 
 
@@ -115,7 +115,7 @@ class PyEditor(SphinxDirective):
         return [
             nodes.raw(
                 "",
-                f"<script type='py-editor' {attrs}>\n{code}\n</script>\n",
+                f'<script type="py-editor" {attrs}>\n{code}\n</script>\n',
                 format="html",
             )
         ]
@@ -173,8 +173,8 @@ def doctree_read(app: Sphinx, doctree: nodes.document):
             )
 
 
-def copy_asset_files(app, exc):
-    if app.builder.format == "html" and not exc:
+def copy_asset_files(app, _):
+    if app.builder.format == "html":
         custom_file = (Path(__file__).parent / "mini-coi.js").absolute()
         static_dir = (Path(app.builder.outdir)).absolute()
         copy_asset_file(str(custom_file), str(static_dir))
