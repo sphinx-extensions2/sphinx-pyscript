@@ -168,4 +168,4 @@ def copy_asset_files(app, exc):
     if app.builder.format == "html" and not exc:
         custom_file = (Path(__file__).parent / "mini-coi.js").absolute()
         static_dir = (Path(app.builder.outdir)).absolute()
-        copy_asset_file(custom_file, static_dir)
+        copy_asset_file(str(custom_file), str(static_dir))
