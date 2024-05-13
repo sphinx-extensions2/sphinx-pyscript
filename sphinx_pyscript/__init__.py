@@ -124,7 +124,9 @@ class PyEditor(SphinxDirective):
 class PyTerminal(SphinxDirective):
     """Add a py-terminal tag"""
 
-    option_spec = {}
+    option_spec = {
+        "worker": directives.flag,
+    }
 
     def run(self):
         """Add the py-terminal tag"""
