@@ -87,9 +87,16 @@ class PyEditor(SphinxDirective):
     """Add a py-editor tag"""
 
     has_content = True
+
+    """
+    Notes on <py-editor> options. See https://docs.pyscript.net/2024.5.2/user-guide/editor/ for details
+        env: The name of a particular instance of the CPython interpreter. Cells with the same 'env' share an interpreter
+        setup: designates a 'setup' tag 
+        config: The URL of a PyScript configuration file (TOML or JSON), or an inline configuration
+    """
     option_spec = {
-        "setup": directives.flag,
         "env": directives.unchanged,
+        "setup": directives.flag,
         "config": directives.unchanged,
     }
 
