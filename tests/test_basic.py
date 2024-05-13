@@ -14,10 +14,7 @@ Test
     splashscreen:
         autoclose: true
 
-.. py-repl::
-    :output: replOutput
-
-.. py-terminal::
+.. py-editor::
 
 .. py-script::
 
@@ -33,9 +30,9 @@ Test
         <title>
             Test
         <raw format="html" xml:space="preserve">
-            <py-repl output="replOutput">
+            <script type="py-editor">
 
-            </py-repl>
+            </script>
         <raw format="html" xml:space="preserve">
             <py-terminal></py-terminal>
         <raw format="html" xml:space="preserve">
