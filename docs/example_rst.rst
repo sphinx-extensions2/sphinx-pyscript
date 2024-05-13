@@ -69,7 +69,7 @@ Add the `setup` option to an editor tag in a given environment to include code t
 Use the `config` option to specify the url of a `PyScript Configuration File <https://docs.pyscript.net/2024.5.2/user-guide/configuration/>`_:
 
 .. code-block:: toml
-    
+
     # config.toml
     packages = ['numpy', 'pandas']
 
