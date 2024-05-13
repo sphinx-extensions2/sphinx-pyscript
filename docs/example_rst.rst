@@ -8,42 +8,28 @@
 Example with RST
 ================
 
-`py-repl` and `py-terminal`
+`py-editor` and `py-terminal`
 ----------------------------
 
-We can create a REPL which will output to a `div` and print `stdout` to a terminal with:
+We can create an editor cell which will print `stdout`:
 
 .. code-block:: restructuredtext
 
-    .. py-repl::
-        :output: replOutput
+    .. py-editor::
 
         print("hallo world")
         import matplotlib.pyplot as plt
         plt.plot([1, 2, 3])
         plt.gcf()
 
-    .. raw:: html
-
-        <div id="replOutput"></div>
-
-    .. py-terminal::
-
 Press `shift+enter` to run the code.
 
-.. py-repl::
-    :output: replOutput
+.. py-editor::
 
     print("hallo world")
     import matplotlib.pyplot as plt
     plt.plot([1, 2, 3])
     plt.gcf()
-
-.. raw:: html
-
-    <div id="replOutput"></div>
-
-.. py-terminal::
 
 `py-script` application
 -----------------------
