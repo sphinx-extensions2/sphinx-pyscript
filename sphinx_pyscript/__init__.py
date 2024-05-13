@@ -81,7 +81,7 @@ class PyScript(SphinxDirective):
 
 
 class PyEditor(SphinxDirective):
-    """Add a py-repl tag"""
+    """Add a py-editor tag"""
 
     has_content = True
     option_spec = {
@@ -91,7 +91,7 @@ class PyEditor(SphinxDirective):
     }
 
     def run(self):
-        """Add the py-repl tag"""
+        """Add the py-editor tag"""
         attrs = ""
         code = ""
         if "env" in self.options:
