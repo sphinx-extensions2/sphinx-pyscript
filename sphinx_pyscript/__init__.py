@@ -1,6 +1,6 @@
 """A sphinx extension for adding pyscript to a page"""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import json
 from pathlib import Path
@@ -10,23 +10,29 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
+from sphinx.util.fileutil import copy_asset_file
 from sphinx.util.logging import getLogger
+
+DEFAULT_VERSION = "2024.5.2"
 
 
 def setup(app: Sphinx):
     """Setup the extension"""
     app.add_config_value(
-        "pyscript_js", "https://pyscript.net/releases/2022.12.1/pyscript.js", "env"
+        "pyscript_js", f"https://pyscript.net/releases/{DEFAULT_VERSION}/core.js", "env"
     )
     app.add_config_value(
-        "pyscript_css", "https://pyscript.net/releases/2022.12.1/pyscript.css", "env"
+        "pyscript_css",
+        f"https://pyscript.net/releases/{DEFAULT_VERSION}/core.css",
+        "env",
     )
     app.add_directive("py-config", PyConfig)
     app.add_directive("py-script", PyScript)
-    app.add_directive("py-repl", PyRepl)
+    app.add_directive("py-editor", PyEditor)
     app.add_directive("py-terminal", PyTerminal)
     app.connect("doctree-read", doctree_read)
     app.connect("html-page-context", add_html_context)
+    app.connect("env-updated", copy_asset_files)
     return {"version": __version__, "parallel_read_safe": True}
 
 
@@ -72,44 +78,66 @@ class PyScript(SphinxDirective):
             code = "\n".join(self.content)
         else:
             raise self.error("Must provide either content or the 'file' option")
-        return [nodes.raw("", f"<py-script>\n{code}\n</py-script>\n", format="html")]
+        return [
+            nodes.raw("", f"<script type='py'>\n{code}\n</script>\n", format="html")
+        ]
 
 
-class PyRepl(SphinxDirective):
-    """Add a py-repl tag"""
+class PyEditor(SphinxDirective):
+    """Add a py-editor tag"""
 
     has_content = True
+
+    """
+    Notes on <py-editor> options. See https://docs.pyscript.net/2024.5.2/user-guide/editor/ for details
+        env: The name of a particular instance of the CPython interpreter. Cells with the same 'env' share an interpreter
+        setup: designates a 'setup' tag
+        config: The URL of a PyScript configuration file (TOML or JSON), or an inline configuration
+    """
     option_spec = {
-        "auto-generate": directives.flag,
-        "output": directives.unchanged,
+        "env": directives.unchanged,
+        "setup": directives.flag,
+        "config": directives.unchanged,
     }
 
     def run(self):
-        """Add the py-repl tag"""
+        """Add the py-editor tag"""
         attrs = ""
         code = ""
-        if "auto-generate" in self.options:
-            attrs += ' auto-generate="true"'
-        if "output" in self.options:
-            attrs += f' output="{self.options["output"]}"'
+        if "env" in self.options:
+            attrs += f' env="{self.options["""env"""]}"'
+        if "config" in self.options:
+            attrs += f' config="{self.options["""config"""]}"'
+        if "setup" in self.options:
+            attrs += "setup"
         if self.content:
             code = "\n".join(self.content)
-        return [nodes.raw("", f"<py-repl{attrs}>\n{code}\n</py-repl>\n", format="html")]
+        return [
+            nodes.raw(
+                "",
+                f'<script type="py-editor" {attrs}>\n{code}\n</script>\n',
+                format="html",
+            )
+        ]
 
 
 class PyTerminal(SphinxDirective):
     """Add a py-terminal tag"""
 
     option_spec = {
-        "auto": directives.flag,
+        "worker": directives.flag,
     }
 
     def run(self):
         """Add the py-terminal tag"""
         attrs = ""
-        if "auto" in self.options:
-            attrs += " auto"
-        return [nodes.raw("", f"<py-terminal{attrs}></py-terminal>\n", format="html")]
+        if "worker" in self.options:
+            attrs += " worker"
+        return [
+            nodes.raw(
+                "", f"<script type='py' terminal {attrs}></script>\n", format="html"
+            )
+        ]
 
 
 def add_html_context(
@@ -117,7 +145,8 @@ def add_html_context(
 ):
     """Add extra variables to the HTML template context."""
     if doctree and "pyscript" in doctree:
-        app.add_js_file(app.config.pyscript_js, loading_method="defer")
+        app.add_js_file(app.config.pyscript_js, type="module")
+        app.add_js_file("../mini-coi.js")
         app.add_css_file(app.config.pyscript_css)
 
 
@@ -142,3 +171,10 @@ def doctree_read(app: Sphinx, doctree: nodes.document):
                     format="html",
                 )
             )
+
+
+def copy_asset_files(app, _):
+    if app.builder.format == "html":
+        custom_file = (Path(__file__).parent / "mini-coi.js").absolute()
+        static_dir = (Path(app.builder.outdir)).absolute()
+        copy_asset_file(str(custom_file), str(static_dir))

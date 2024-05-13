@@ -8,42 +8,80 @@
 Example with RST
 ================
 
-`py-repl` and `py-terminal`
-----------------------------
+`py-editor` and `py-terminal`
+-----------------------------
 
-We can create a REPL which will output to a `div` and print `stdout` to a terminal with:
+We can create an editor cell which will print its `stdout`:
 
 .. code-block:: restructuredtext
 
-    .. py-repl::
-        :output: replOutput
+    .. py-editor::
 
         print("hallo world")
         import matplotlib.pyplot as plt
         plt.plot([1, 2, 3])
         plt.gcf()
 
-    .. raw:: html
-
-        <div id="replOutput"></div>
-
-    .. py-terminal::
-
 Press `shift+enter` to run the code.
 
-.. py-repl::
-    :output: replOutput
+.. py-editor::
 
     print("hallo world")
     import matplotlib.pyplot as plt
     plt.plot([1, 2, 3])
     plt.gcf()
 
-.. raw:: html
+By default, each editor uses a separate copy of the Python interpreter. Code blocks with the same `env` (environment) share a copy of the Python interpreter:
 
-    <div id="replOutput"></div>
+.. code-block:: restructuredtext
 
-.. py-terminal::
+    .. py-editor::
+        :env: one
+
+        x = 1
+
+    .. py-editor::
+        :env: one
+
+        print(x)
+
+    .. py-editor::
+        :env: two
+
+        print(x) # Error: x is not defined
+
+Add the `setup` option to an editor tag in a given environment to include code that will run just before the first time the visible code in a block runs in that environment. Code in a `setup` block is invisible to the user. This is useful for setting up variables, imports, etc without cluttering up the editor cells.
+
+.. code-block:: restructuredtext
+
+    .. py-editor::
+        :env: one
+        :setup:
+
+        # This code is not visible on the page
+        from datetime import datetime
+
+    .. py-editor::
+        :env: one
+
+        print(datetime.now())
+
+Use the `config` option to specify the url of a `PyScript Configuration File <https://docs.pyscript.net/2024.5.2/user-guide/configuration/>`_:
+
+.. code-block:: toml
+
+    # config.toml
+    packages = ['numpy', 'pandas']
+
+.. code-block:: restructuredtext
+
+    .. py-editor::
+        :config: config.toml
+
+        import numpy as np
+        import pandas as pd
+
+        s = pd.Series([1, 3, 5, np.nan, 6, 8])
 
 `py-script` application
 -----------------------

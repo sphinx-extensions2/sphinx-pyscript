@@ -14,8 +14,7 @@ Test
     splashscreen:
         autoclose: true
 
-.. py-repl::
-    :output: replOutput
+.. py-editor::
 
 .. py-terminal::
 
@@ -33,15 +32,15 @@ Test
         <title>
             Test
         <raw format="html" xml:space="preserve">
-            <py-repl output="replOutput">
+            <script type="py-editor" >
 
-            </py-repl>
+            </script>
         <raw format="html" xml:space="preserve">
-            <py-terminal></py-terminal>
+            <script type='py' terminal ></script>
         <raw format="html" xml:space="preserve">
-            <py-script>
+            <script type='py'>
             print("Hello World")
-            </py-script>
+            </script>
     <raw format="html" xml:space="preserve">
         <py-config type="json">
         {
