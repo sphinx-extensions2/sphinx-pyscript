@@ -1,3 +1,6 @@
+/*! This script installs a service worker to set the COOP, COEP, and CORP headers required 
+to use SharedArrayBuffer in the browser. This is required to use py-editor cells.
+See https://docs.pyscript.net/2024.5.2/user-guide/workers/ for details */
 /*! coi-serviceworker v0.1.7 - Guido Zuidhof and contributors, licensed under MIT */
 /*! mini-coi - Andrea Giammarchi and contributors, licensed under MIT */
 (({ document: d, navigator: { serviceWorker: s } }) => {
