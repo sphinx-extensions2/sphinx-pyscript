@@ -4,8 +4,7 @@ from sphinx_pytest.plugin import CreateDoctree
 def test_basic(sphinx_doctree: CreateDoctree):
     sphinx_doctree.set_conf({"extensions": ["sphinx_pyscript"]})
     sphinx_doctree.buildername = "html"
-    result = sphinx_doctree(
-        """
+    result = sphinx_doctree("""
 Test
 ----
 
@@ -23,11 +22,8 @@ Test
 
     print("Hello World")
 
-    """
-    )
-    assert (
-        [li.rstrip() for li in result.pformat().strip().splitlines()]
-        == """
+    """)
+    assert [li.rstrip() for li in result.pformat().strip().splitlines()] == """
 <document pyscript="True" source="<src>/index.rst">
     <section ids="test" names="test">
         <title>
@@ -51,4 +47,3 @@ Test
         }
         </py-config>
     """.strip().splitlines()
-    )
